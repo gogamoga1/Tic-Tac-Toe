@@ -6,7 +6,7 @@
 .buttons button {
 
   position: relative;
-  left:45%;
+  left:39%;
   margin: 5px;
   height: 25px;
 }
@@ -22,6 +22,7 @@
   width: 600px;
   height: 600px;
   margin: 0 auto;
+  visibility: hidden;
   
 
 
@@ -37,4 +38,19 @@
   font-size: 5em;
   padding: 1px;
   text-align: center;
+}
+
+#newgame {
+visibility: hidden;
+position: absolute;
+}
+
+form {
+  position: absolute;
+  left: 45%;
+  visibility: hidden;
+}
+
+input[type=submit]{
+  visibility: hidden;
 }

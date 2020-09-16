@@ -9,11 +9,22 @@
 </head>
 
 <body>
+  <div class="main">
+<div class="buttons">
 
    <button type="button" id="newgame">New Game</button>
-   <button type="button" >1 Player</button>
-   <button type="button" >2 Players</button>
-    <div class="grid-container"></div>
+   <button type="button" id="1pl">1 Player</button>
+   <button type="button" id="2pl">2 Players</button>
+   </div>
+
+   <form >
+    <label for="fname" >First player:</label><br>
+    <input type="text" id="fname" name="fname" placeholder="Name" required><br>
+    <label for="lname">Second Player:</label><br>
+    <input type="text" id="lname" name="lname" placeholder="Name" required>
+    <input type="submit">
+  </form>
+    <div class="grid-container"></div></div>
 
   <div class="winner"></div>
 
