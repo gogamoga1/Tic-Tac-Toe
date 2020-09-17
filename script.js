@@ -4,7 +4,7 @@ const form = document.querySelector("form");
 let turn = 1;
 
 const gameboard = (() => {
-  let board = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
+  let board = [0,1 ,2,3,4 ,5, 6 ,7,8];
 
   const getBoard = () => board;
   const setMark = (idx) => (board[idx] = "X");
@@ -55,13 +55,11 @@ const Controller = () => {
   return { gameState, numPlayers };
 };
 
-
-
 const AI = (() => {
   const makeMove = () => {
     if (Controller.gameState) return;
-    let randomNumber = Math.floor(Math.random() * 10);
-    if (gameboard.getBoard()[randomNumber] === " ") {
+    let randomNumber = minimax(gameboard.getBoard(), "O").index;
+    if (!isNaN(gameboard.getBoard()[randomNumber])) {
       gameboard.setMarkAI(randomNumber);
       document.querySelector(`#\\3${randomNumber}`).textContent = "O";
       checkWinner(gameboard.getBoard());
@@ -75,32 +73,34 @@ const AI = (() => {
 })();
 
 function checkWinner(board) {
+  let winner = "";
   if (Controller.gameState) return;
   let winningChar = (a, b, c) => {
-    if (board[a] === board[b] && board[b] === board[c] && board[a] !== " ") {
+    if (board[a] === board[b] && board[b] === board[c] && isNaN(board[a])) {
       board[a] === "X"
-      ? alert(`${playerOne.name} won!`)
-      : alert(`${Controller.numPlayers === 2 ? playerTwo.name : "AI"} won`);
+        ? (alert(`${playerOne.name} won!`), (winner = "X"))
+        : (alert(`${Controller.numPlayers === 2 ? playerTwo.name : "AI"} won`),
+          (winner = "O"));
       Controller.gameState = 1;
       return true;
     }
     return false;
   };
-  if (winningChar(0, 4, 8)) return;
-  if (winningChar(2, 4, 6)) return;
-  if (winningChar(0, 1, 2)) return;
-  if (winningChar(3, 4, 5)) return;
-  if (winningChar(6, 7, 8)) return;
-  if (winningChar(0, 3, 6)) return;
-  if (winningChar(1, 4, 7)) return;
-  if (winningChar(2, 5, 8)) return;
-  
-  if (gameboard.getBoard().indexOf(" ") === -1) alert("It's a tie");
+  if (winningChar(0, 4, 8)) return winner;
+  if (winningChar(2, 4, 6)) return winner;
+  if (winningChar(0, 1, 2)) return winner;
+  if (winningChar(3, 4, 5)) return winner;
+  if (winningChar(6, 7, 8)) return winner;
+  if (winningChar(0, 3, 6)) return winner;
+  if (winningChar(1, 4, 7)) return winner;
+  if (winningChar(2, 5, 8)) return winner;
+
+  //if (gameboard.getBoard().indexOf(" ") === -1) alert("It's a tie");
 }
 
 container.addEventListener("click", (e) => {
   if (e.target.className === "grid-container") return;
-  if (e.target.textContent === " " && !Controller.gameState) {
+  if (!isNaN(e.target.textContent) && !Controller.gameState) {
     if (Controller.numPlayers === 2) {
       if (turn === 1) {
         e.target.textContent = "X";
@@ -141,18 +141,99 @@ newBtn.forEach((button) => {
       form.style.visibility = "visible";
       lname.style.visibility = "hidden";
       lname.previousElementSibling.previousElementSibling.style.visibility =
-      "hidden";
+        "hidden";
       lname.required = false;
-      
     }
     if (e.target.id === "2pl") {
       newBtn[1].style.visibility = "hidden";
       newBtn[2].style.visibility = "hidden";
       form.style.visibility = "visible";
-      
+
       Controller.numPlayers = 2;
     }
   });
 });
 
 var playerOne, playerTwo;
+
+function emptyIndexies(board) {
+  let empty = [];
+  board.forEach((item, idx) => {
+    if (item != "O" && item != "X") {
+      empty.push(idx);
+    }
+  });
+  return empty;
+}
+
+function minimax(newBoard, player) {
+  let freeSpots = emptyIndexies(newBoard);
+
+  if (checkWinner1337(newBoard) === "X") return { score: -10 };
+  else if (checkWinner1337(newBoard) === "O") return { score: 10 };
+  else if (freeSpots.length === 0) return { score: 0 };
+
+  let moves = [];
+
+  for (let i = 0; i < freeSpots.length; i++) {
+    let move = {};
+    move.index = freeSpots[i];
+    newBoard[freeSpots[i]] = player;
+
+    if (player === "O") {
+      let result = minimax(newBoard, "X");
+      move.score = result.score;
+    } else {
+      let result = minimax(newBoard, "O");
+      move.score = result.score;
+    }
+    newBoard[freeSpots[i]] = move.index;
+    moves.push(move);
+    
+  }
+
+  let bestMove;
+  if (player === "O") {
+    let bestScore = -10000;
+    for (let i = 0 ; i < moves.length; i++) {
+      if (moves[i].score > bestScore) {
+        bestScore = moves[i].score;
+        bestMove = i;
+      }
+    }
+  }
+  else {
+    let bestScore = 10000;
+    for (let i = 0 ; i < moves.length; i++) {
+      if (moves[i].score < bestScore) {
+        bestScore = moves[i].score;
+        bestMove = i;
+      }
+  }
+}
+return moves[bestMove];
+}
+
+
+function checkWinner1337(board) {
+  let winner = "";
+  if (Controller.gameState) return;
+  let winningChar = (a, b, c) => {
+    if (board[a] === board[b] && board[b] === board[c] && isNaN(board[a]) ) {
+      board[a] === "X"
+        ? winner = "X"
+        : winner = "O"
+      return true;
+    }
+    return false;
+  };
+  if (winningChar(0, 4, 8)) return winner;
+  if (winningChar(2, 4, 6)) return winner;
+  if (winningChar(0, 1, 2)) return winner;
+  if (winningChar(3, 4, 5)) return winner;
+  if (winningChar(6, 7, 8)) return winner;
+  if (winningChar(0, 3, 6)) return winner;
+  if (winningChar(1, 4, 7)) return winner;
+  if (winningChar(2, 5, 8)) return winner;
+
+}
