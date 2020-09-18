@@ -208,20 +208,13 @@ function markSpot(id, player) {
   gameboard.setMark(id, player);
 
   if (checkWinner(gameboard.getBoard(), player)) {
-    alert(
-      `${
-        Controller.numPlayers === 1 && player === "O"
-          ? "AI"
-          : player === "X"
-          ? guy.name
-          : gal.name
-      } won`
-    );
+    let winner  = (Controller.numPlayers !== 2 && player === "O") ? "AI" : (player === "X") ? guy.name : gal.name;
+    console.log(winner)
+    alert(`${winner} won`);
     Controller.gameState = 1;
-    return;
   }
 
-  if (gameboard.getBoard().every((item) => typeof item !== "number")) {
+  else if (gameboard.getBoard().every((item) => typeof item !== "number")) {
     alert("It's a tie");
     Controller.gameState = 1;
   }
