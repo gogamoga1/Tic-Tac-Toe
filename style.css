@@ -26,7 +26,6 @@
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), 1fr);
   grid-template-rows: repeat(var(--grid-rows), 1fr);
-  background-color: #2196F3;
   padding: 10px;
   width: 600px;
   height: 600px;
@@ -38,6 +37,8 @@
 
 
 }
+
+
 .grid-item {
   background-color: rgba(255, 255, 255, 0.8);
   display: flex;
@@ -47,8 +48,33 @@
   font-size: 5em;
   padding: 1px;
   text-align: center;
+  cursor: pointer;
+  transition-duration: 0.2s;
+}
+.grid-item:active {
+  
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
 }
 
+.grid-item:last-child,
+.grid-item:nth-child(8),
+.grid-item:nth-child(7) {
+  border-bottom: none;
+}
+
+.grid-item:first-child,
+.grid-item:nth-child(2),
+.grid-item:nth-child(3) {
+  border-top: none;
+}
+
+.grid-item:nth-child(3n + 1) {
+  border-left: none;
+}
+
+.grid-item:nth-child(3n + 3) {
+  border-right: none;
+}
 #newgame {
 visibility: hidden;
 position: absolute;
@@ -57,7 +83,6 @@ left: 47%;
 
 #newgame:active { 
   transform: scale(0.98); 
-  /* Scaling button to 0.98 to its original size */ 
   box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24); 
 }
 
